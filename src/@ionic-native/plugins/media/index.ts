@@ -24,6 +24,16 @@ export class MediaObject {
   onStatusUpdate: Observable<MEDIA_STATUS>;
 
   /**
+   * An observable that notifies you when the duration changes
+   */
+  onDurationUpdate: Observable<any>;
+
+  /**
+   * An observable that notifies you when the progress through a file changes
+   */
+  onPositionUpdate: Observable<any>;
+
+  /**
    * @hidden
    */
   @InstanceProperty
@@ -41,20 +51,41 @@ export class MediaObject {
   @InstanceProperty
   statusCallback: Function;
 
+  /**
+   * @hidden
+   */
+  @InstanceProperty
+  durationCallback: Function;
+
+  /**
+   * @hidden
+   */
+  positionCallback: Function;
+
   constructor(private _objectInstance: any) {
     this.onSuccess = new Observable<any>((observer: Observer<any>) => {
       this.successCallback = observer.next.bind(observer);
-      return () => this.successCallback = () => {};
+      return () => this.successCallback = () => { };
     });
 
     this.onError = new Observable<MEDIA_ERROR>((observer: Observer<MEDIA_ERROR>) => {
       this.errorCallback = observer.next.bind(observer);
-      return () => this.errorCallback = () => {};
+      return () => this.errorCallback = () => { };
     });
 
     this.onStatusUpdate = new Observable<MEDIA_STATUS>((observer: Observer<MEDIA_STATUS>) => {
       this.statusCallback = observer.next.bind(observer);
-      return () => this.statusCallback = () => {};
+      return () => this.statusCallback = () => { };
+    });
+
+    this.onDurationUpdate = new Observable<any>((observer: Observer<any>) => {
+      this.durationCallback = observer.next.bind(observer);
+      return () => this.durationCallback = () => { };
+    });
+
+    this.onPositionUpdate = new Observable<any>((observer: Observer<any>) => {
+      this.positionCallback = observer.next.bind(observer);
+      return () => this.positionCallback = () => { };
     });
   }
 
@@ -115,7 +146,7 @@ export class MediaObject {
   setVolume(volume: number): void { }
 
   @CordovaInstance({ sync: true })
-  setRate(speedRate: number): void {}
+  setRate(speedRate: number): void { }
 
   /**
    * Starts recording an audio file.
